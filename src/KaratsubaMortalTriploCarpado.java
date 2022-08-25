@@ -40,12 +40,10 @@ public class KaratsubaMortalTriploCarpado {
         if (onlyOneDigit(a, b)) return valueOf(parseInt(a) * parseInt(b));
 
         while (isNotSameSize(a, b)) {
-            if (a.length() > b.length()) {
-                b = "0".concat(b);
-            } else {
-                a = "0".concat(a);
-            }
+            a = padWithZeros(a, b);
+            b = padWithZeros(b, a);
         }
+
         var length = a.length();
 
         String a1, a2, a3, b1, b2, b3;
@@ -81,39 +79,37 @@ public class KaratsubaMortalTriploCarpado {
                 .reduce("", KaratsubaMortalTriploCarpado::sum));
     }
 
-    private static boolean isNotSameSize(String a, String b) {
-        return a.length() != b.length();
-    }
-
     private static String sum(String a, String b) {
         if (bothZero(a, b)) return "0";
 
         while (isNotSameSize(a, b)) {
-            if (a.length() > b.length()) {
-                b = "0".concat(b);
-            } else {
-                a = "0".concat(a);
-            }
+            a = padWithZeros(a, b);
+            b = padWithZeros(b, a);
         }
 
         var length = a.length();
 
-        var result = new StringBuilder();
         var carry = 0;
+        var result = new StringBuilder();
         for (int i = length - 1; i >= 0; i--) {
             var x = parseInt(valueOf(a.charAt(i)));
             var y = parseInt(valueOf(b.charAt(i)));
+
             var sum = Integer.toString(x + y + carry);
             carry = 0;
+
             if (sum.length() > 1) {
                 carry = 1;
                 sum = valueOf(sum.charAt(1));
             }
+
             result.insert(0, sum);
         }
+
         if (carry == 1) {
             result.insert(0, carry);
         }
+
         return result.toString();
     }
 
@@ -121,6 +117,17 @@ public class KaratsubaMortalTriploCarpado {
         var shift = new char[length];
         fill(shift, '0');
         return new String(shift);
+    }
+
+    private static String padWithZeros(String a, String b) {
+        if (b.length() > a.length()) {
+            a = "0".concat(a);
+        }
+        return a;
+    }
+
+    private static boolean isNotSameSize(String a, String b) {
+        return a.length() != b.length();
     }
 
     private static boolean onlyOneDigit(String a, String b) {
